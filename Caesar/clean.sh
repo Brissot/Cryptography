@@ -1,7 +1,10 @@
 #!/bin/bash
 
-rm *~
-rm \#*
+# the -- and ./ prevents files from being passed in as options to rm.
+# a file would be named "-f /" would run "rm -f /", otherwise... kinda scary
 
-rm *.o
-rm *.hi
+rm -- ./*~
+rm -- ./\#*
+
+rm -- ./*.o
+rm -- ./*.hi

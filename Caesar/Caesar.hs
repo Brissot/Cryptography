@@ -17,3 +17,7 @@ shiftChar shift c= if shift == 0
 encodeCaesar :: [Char] -> Integer -> [Char]
 encodeCaesar message shift_raw= let shift= mod shift_raw 26 in
                                 map (shiftChar shift) message
+
+decodeCaesar :: [Char] -> Integer -> [Char]
+decodeCaesar message shift_raw= let shift= 26 - (mod shift_raw 26) in
+                                map (shiftChar shift) message
