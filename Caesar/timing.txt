@@ -1,0 +1,18 @@
+Test I - TestCaesar, single steps
+time (./TestCaesar war_n_peace.txt 600 > /dev/null)
+
+real	0m0.089s
+user	0m0.089s
+sys	0m0.000s
+
+
+
+Test II - TestCaesarII, giant steps
+time (./TestCaesar2 war_n_peace.txt 600 > /dev/null)
+
+real	0m0.277s
+user	0m0.277s
+sys	0m0.000s
+
+
+
