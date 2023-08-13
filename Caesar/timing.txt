@@ -1,8 +1,8 @@
 Test I - TestCaesar, single steps
 time (./TestCaesar war_n_peace.txt 600 > /dev/null)
 
-real	0m2.913s
-user	0m2.909s
+real	0m2.910s
+user	0m2.901s
 sys	0m0.004s
 
 
@@ -10,9 +10,18 @@ sys	0m0.004s
 Test II - TestCaesarII, giant steps
 time (./TestCaesar2 war_n_peace.txt 600 > /dev/null)
 
-real	0m0.285s
-user	0m0.285s
-sys	0m0.000s
+real	0m0.329s
+user	0m0.325s
+sys	0m0.004s
+
+
+
+Test III - TestVigenere
+time (./TestVigenere war_n_peace.txt caesar.txt > /dev/null)
+
+real	0m2.200s
+user	0m2.081s
+sys	0m0.116s
 
 
 

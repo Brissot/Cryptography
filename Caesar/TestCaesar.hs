@@ -14,5 +14,5 @@ main= do
       contents <- hGetContents handle
       
       let tails= tail args
-      let shift= read (head tails) :: Integer
+      let shift= read (head tails) :: Int
       putStr (encodeCaesar contents shift)
