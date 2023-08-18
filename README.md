@@ -23,6 +23,14 @@ decodeVigenere message cypher
 
 **Caesar/AttackCaesar.hs**
 
+These are attacks, so it only needs the message, and from that it will try to
+break the encryption. The difficulty of each attack ramps up from Augustus to
+Caesar to Vigenere, which historically was thought to be unbreakable.
+
+In truth, it was breakable even in its hayday. The Confederate States of
+America, for instance used few keys, which allowed the union to consistantly
+break the keys
+
 attackAugustus encrypted
 
 attackCaesar encrypted
