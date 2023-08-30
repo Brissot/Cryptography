@@ -1,4 +1,4 @@
-module Utilites where
+module Utilities where
 
 -- a helper function for coprime
 coprimeHelper :: Int -> Int -> Int -> Int -> Bool
@@ -12,3 +12,52 @@ coprimeHelper alpha beta bigger factor
 -- are coprime.
 coprime :: Int -> Int -> Bool
 coprime alpha beta= coprimeHelper alpha beta (max alpha beta) 2
+
+coprime' :: Int -> Int -> Bool
+coprime' alpha n= gcd alpha n == 1
+
+allAlphas :: Int -> [Int] -> [Int]
+allAlphas alpha partial
+  | alpha > 26= partial
+  | otherwise= if coprime' alpha 26
+                 then allAlphas (alpha + 1) (alpha:partial)
+               else allAlphas (alpha + 1) partial
+
+allBetas :: Int -> [Int]
+allBetas n
+  | n < 2= error "Beta must be >= 2"
+  | otherwise= [0, 1.. (n - 1)]
+
+modInvHelper :: Int -> Int -> Int -> Int
+modInvHelper alpha n iter
+  | alpha * iter `mod` n == 1= iter
+  | otherwise= modInvHelper alpha n ((iter + alpha) `mod` n)
+
+modInv :: Int -> Int -> Int
+modInv alpha n= modInvHelper alpha n 1
+
+sameAlpha :: Int -> [Int] -> [Int]
+sameAlpha alpha partial
+  | alpha > 26= partial
+  | not (coprime' alpha 26)= sameAlpha (alpha + 1) partial
+  | otherwise= let gamma= modInv alpha 26 in
+               if gamma == alpha
+                 then sameAlpha (alpha + 1) (gamma:partial)
+               else sameAlpha (alpha + 1) partial
+
+sameBeta :: Int -> Int -> Int -> Int -> Bool
+sameBeta alpha beta gamma n= mod beta n == mod (-gamma * beta) n
+
+-- findSameBetas :: Int -> Int -> [(Int, Int)]
+-- findSameBetas n alpha= let betas= allBetas n in
+--                        let gamma= modInv alpha n in
+--                        foldl (\acc beta -> if sameBeta alpha beta gamma n
+--                                              then (alpha, beta):acc
+--                                            else acc) [] betas
+
+-- alphaBetaPairs :: [Int] -> Int -> [(Int, Int)]shiftChar' shift c
+--   | isUpper c= chr (ord 'A' + mod (diffChar c + shift) 26)
+--   | isLower c= chr (ord 'a' + mod (diffChar c + shift) 26)
+--   | otherwise= c
+
+-- alphaBetaPairs alphas n= foldl (findSameBetas n) [] 

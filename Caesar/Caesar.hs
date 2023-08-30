@@ -3,6 +3,8 @@
 module Caesar where
 import Data.Char
 
+import Utilities
+
 -- returns the next character. if z, loops back around to a
 returnNext :: Char -> Char
 returnNext c
@@ -32,6 +34,9 @@ diffChar c
   | isUpper c= ord c - ord 'A'
   | isLower c= ord c - ord 'a'
   | otherwise= 0
+
+invDiffChar :: Int -> Char
+invDiffChar n= chr (ord 'a' + n)
 
 -- shifts the char by shift according to Caesar's Cypher.
 -- should always be O(1) regardless of alphabet used
@@ -96,3 +101,12 @@ decodeVigenere :: [Char] -> [Char] -> [Char]
 decodeVigenere message cypher= let intCypher= matchCypher message cypher in
                                let pairings= zip message intCypher in
                                map vigenereDecodeHelper pairings
+
+affine :: Int -> Int -> Char -> Int
+affine alpha beta c= let x= diffChar c in
+                     mod ((alpha * x) + beta) 26
+
+encodeAffine :: [Char] -> Int -> Int -> [Char]
+encodeAffine message alpha beta= let shifts= map (affine alpha beta) message in
+                                 let pairings= zip message shifts in
+                                 map invDiffChar shifts
