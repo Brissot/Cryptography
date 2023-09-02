@@ -117,15 +117,16 @@ decodeVigenere message cypher= let intCypher= matchCypher message cypher in
                                let pairings= zip message intCypher in
                                map vigenereDecodeHelper pairings
 
--- Performs the Affine function on a Char, and returns the letter position as
--- an int
-affine :: Int -> Int -> Char -> Int
-affine alpha beta c= let x= diffChar c in
-                     mod ((alpha * x) + beta) 26
+-- Performs the Affine function on a Char, and returns the encoded letter, or
+-- if it is not a letter, it returns itself
+affine :: Int -> Int -> Char -> Char
+affine alpha beta c
+  | isUpper c= let x= diffChar c in
+               chr (ord 'A' + mod ((alpha * x) + beta) 26)
+  | isLower c= let x= diffChar c in
+               chr (ord 'a' + mod ((alpha * x) + beta) 26)
+  | otherwise= c
 
 -- Encodes the Affine Cypher
--- TODO: Make it preserve uppercase and lowercase
 encodeAffine :: [Char] -> Int -> Int -> [Char]
-encodeAffine message alpha beta= let shifts= map (affine alpha beta) message in
-                                 let pairings= zip message shifts in
-                                 map invDiffChar shifts
+encodeAffine message alpha beta= map (affine alpha beta) message
