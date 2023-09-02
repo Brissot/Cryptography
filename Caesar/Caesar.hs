@@ -1,4 +1,4 @@
--- Caesar's Cypher and its derrivatives
+-- Caesar's Cypher and its derivatives
 
 module Caesar where
 import Data.Char
@@ -20,10 +20,12 @@ shiftChar shift c
   | shift == 0= c
   | otherwise= shiftChar (shift - 1) (returnNext c)
 
+-- encodes Caesar Cypher (Shift Cypher) on a String and inputted Int key
 encodeCaesar :: [Char] -> Int -> [Char]
 encodeCaesar message shiftRaw= let shift= mod shiftRaw 26 in
                                 map (shiftChar shift) message
 
+-- decodes Caesar Cypher (Shift Cypher) on a Cyphertext and inputted Int key
 decodeCaesar :: [Char] -> Int -> [Char]
 decodeCaesar message shiftRaw= let shift= 26 - mod shiftRaw 26 in
                                  map (shiftChar shift) message
@@ -35,6 +37,8 @@ diffChar c
   | isLower c= ord c - ord 'a'
   | otherwise= 0
 
+-- inverse of diffChar. Takes a letter position as an int and converts it into
+-- a character
 invDiffChar :: Int -> Char
 invDiffChar n= chr (ord 'a' + n)
 
@@ -46,10 +50,12 @@ shiftChar' shift c
   | isLower c= chr (ord 'a' + mod (diffChar c + shift) 26)
   | otherwise= c
 
+-- a faster Caesar's Cypher
 encodeCaesar' :: [Char] -> Int -> [Char]
 encodeCaesar' message shiftRaw= let shift= mod shiftRaw 26 in
                                 map (shiftChar' shift) message
 
+-- a faster decode Caesar's Cypher
 decodeCaesar' :: [Char] -> Int -> [Char]
 decodeCaesar' message shiftRaw= let shift= 26 - mod shiftRaw 26 in
                                  map (shiftChar' shift) message
@@ -64,6 +70,8 @@ encodeAugustus message= let caesar= encodeCaesar message 1 in
                               then acc ++ "aa"
                             else acc ++ [c]) "" caesar
 
+-- Takes an accumulator and a message. If it encounters a z, then it will skip
+-- the next letter and continue
 skipCount :: [Char] -> [Char] -> [Char]
 skipCount acc []= acc
 skipCount acc message= let h:t= message in
@@ -71,41 +79,52 @@ skipCount acc message= let h:t= message in
                          then skipCount (acc ++ [h]) (tail t)
                        else skipCount (acc ++ [h]) t
 
+-- Decodes the Augustus Cypher
 decodeAugustus :: [Char] -> [Char]
 decodeAugustus message= let caesar= decodeCaesar message 1 in
                         skipCount [] caesar
 
 
+-- Extends a string to match or exceed the length of another inputted string
 extendCypher :: [Char] -> [Char] -> [Char]
 extendCypher message cypher= if length cypher >= length message
                                then cypher
                              else extendCypher message (cypher ++ cypher)
 
+-- Matches the length of two inputted strings
 matchCypher :: [Char] -> [Char] -> [Int]
 matchCypher message cypher= let longCypher= extendCypher message cypher in
                             let rightCypher= take (length message) longCypher in
                             map diffChar rightCypher
 
+-- runs the encodeCaesar part of the Vigenere Cypher
 vigenereEncodeHelper :: (Char, Int) -> Char
 vigenereEncodeHelper (messageChar, shift)= head (encodeCaesar' [messageChar] shift)
 
+-- encodes the Vigenere Cypher
 encodeVigenere :: [Char] -> [Char] -> [Char]
 encodeVigenere message cypher= let intCypher= matchCypher message cypher in
                                let pairings= zip message intCypher in
                                map vigenereEncodeHelper pairings
 
+-- runs the Decode Caesar part of the Vigenere Cypher
 vigenereDecodeHelper :: (Char, Int) -> Char
 vigenereDecodeHelper (messageChar, shift)= head (decodeCaesar' [messageChar] shift)
 
+-- decodes the Vigenere Cypher
 decodeVigenere :: [Char] -> [Char] -> [Char]
 decodeVigenere message cypher= let intCypher= matchCypher message cypher in
                                let pairings= zip message intCypher in
                                map vigenereDecodeHelper pairings
 
+-- Performs the Affine function on a Char, and returns the letter position as
+-- an int
 affine :: Int -> Int -> Char -> Int
 affine alpha beta c= let x= diffChar c in
                      mod ((alpha * x) + beta) 26
 
+-- Encodes the Affine Cypher
+-- TODO: Make it preserve uppercase and lowercase
 encodeAffine :: [Char] -> Int -> Int -> [Char]
 encodeAffine message alpha beta= let shifts= map (affine alpha beta) message in
                                  let pairings= zip message shifts in
