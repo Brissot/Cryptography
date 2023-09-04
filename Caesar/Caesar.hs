@@ -76,6 +76,7 @@ affine alpha beta c
 encodeAffine :: [Char] -> Int -> Int -> [Char]
 encodeAffine message alpha beta= map (affine alpha beta) message
 
+-- Decodes the Affine Cypher
 decodeAffine :: [Char ] -> Int -> Int -> [Char]
 decodeAffine cypher alpha beta=
   let invAlpha= modInv alpha 26 in
